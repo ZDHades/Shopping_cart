@@ -1,0 +1,93 @@
+from IPython.display import clear_output
+
+def show_instructions():
+    print("""Type 'add' to add an item to your cart.
+Type 'remove' to remove an item from your cart.
+Type 'clear' to remove all items from your cart.
+Type 'show' to show your cart items.
+Type 'quit' to exit program and show your cart.
+""")
+
+def add_item(a_list, item_dict):
+    return a_list.append(item_dict)
+
+def remove_item(a_list, item_dict):
+    for p in a_list:
+        if p['name'] == item_dict['name']:
+            a_list.remove(p)
+
+def show_items(a_list):
+    print('=' * 40)
+#     First Version
+#     if not a_list:
+#         print("You have no items in your cart. ")
+#     else:
+#         new_list = list(set(a_list))
+#         for i in range(len(new_list)):
+#             print(f"{i+1}: {new_list[i]} [{a_list.count(new_list[i])}]")
+    if not a_list:
+        print("You have no items in your cart. ")
+    else:
+        display_cart = []
+        for p in a_list:
+            if p not in display_cart:
+                display_cart.append({
+                    'name': p['name'],
+                    'price': p['price']
+                })
+            else:
+                for i in display_cart:
+                    if i['name'] == p['name']:
+                        i['price'] += p['price']
+
+        # for i in range(len(cart)):
+        #     print(f"{i+1}: {cart[i]['name']} [{[i['name'] for i in products].count(cart[i]['name'])}] ${cart[i]['price']}")
+
+        for index, item_dict in enumerate(display_cart):
+            print(f"{index+1}: {item_dict['name']} [{[i['name'] for i in a_list].count(item_dict['name'])}] ${item_dict['price']:,.2f}")
+    print('=' * 40)
+    print(f"Total: ${float(sum([p['price'] for p in a_list])):,.2f}")
+        
+def clear_items(a_list):
+    a_list.clear()
+
+def main():
+    cart = []
+    
+    done = False
+    while not done:
+        clear_output()
+        show_instructions()
+        show_items(cart)
+        ask = input("What would you like to do? ").lower()
+        
+        if ask == 'add':
+            cart_name = input("What item would you like to add? ")
+            cart_price = float(input("How much does the item cost? "))
+            cart_item = {
+                'name': cart_name,
+                'price': cart_price
+            }
+            add_item(cart, cart_item)
+        elif ask == 'show':
+            show_items(cart)
+            confirm = input("Press 'ENTER' when you're done viewing your cart items. ")
+        elif ask == 'remove':
+            cart_item = input("What item would you like to remove? ")
+            for item in cart:
+                if item['name'] == cart_item:
+                    remove_item(cart, item)
+        elif ask == 'clear':
+            clear_items(cart)
+            # Show the user a message saying all items have been cleared
+        elif ask == 'quit':
+            confirm = input("Are you sure? Y/N ").lower()
+            if confirm == 'y':
+                done = True
+            elif confirm == 'n':
+                continue
+    # show cart           
+    return 
+        
+    
+main()
